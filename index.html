@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shimla Spice — Colourful, Interactive & Tasty</title>
+  <meta name="description" content="A playful, colourful, interactive site for Shimla Spice — Homemade goodness in every jar." />
+  <style>
+    /* =====================
+       THEME & RESETS
+       ===================== */
+    :root{
+      --bg: #fff8ef;          /* paper */
+      --ink: #1f2937;         /* text */
+      --muted:#6b7280;        /* helper text */
+      --brand:#ec4c24;        /* primary (chilli red) */
+      --brand-2:#ffb703;      /* turmeric */
+      --brand-3:#34d399;      /* coriander green */
+      --brand-4:#8b5cf6;      /* vibrant accent */
+      --card:#ffffff;         /* card */
+      --ring:#ffd9c9;         /* soft border */
+      --radius: 18px;         /* corners */
+      --shadow: 0 10px 30px rgba(0,0,0,.10);
+      --shadow-soft: 0 6px 16px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:var(--ink); background:var(--bg)}
+    img{max-width:100%;display:block}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1150px;margin-inline:auto;padding:24px}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:var(--radius);box-shadow:var(--shadow);}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;font-weight:700;cursor:pointer;user-select:none;transition:.2s transform,.2s filter}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:var(--brand);color:white}
+    .btn.primary:hover{filter:brightness(1.05)}
+    .btn.ghost{background:white;border:1px solid #e5e7eb;color:#111827}
+    .btn.ghost:hover{background:#f9fafb}
+    .muted{color:var(--muted)}
+
+    /* =====================
+       STICKY NAVBAR
+       ===================== */
+    header{position:sticky;top:0;z-index:50;background:rgba(255,248,239,.75);backdrop-filter:blur(8px) saturate(1.2);border-bottom:1px solid #ffe9d9}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900}
+    .brand-logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;color:white;box-shadow:var(--shadow-soft)}
+    .brand small{display:block;font-weight:700;color:var(--muted);font-size:11px;letter-spacing:.4px}
+    .menu{display:flex;gap:18px;align-items:center}
+    .menu a{padding:10px 12px;border-radius:10px;font-weight:700;color:#374151}
+    .menu a:hover{background:#fff}
+    .menu-toggle{display:none}
+
+    /* =====================
+       FLOATY BACKGROUND ORNAMENTS
+       ===================== */
+    .floaty{
+      position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.25
+    }
+    .blob{position:absolute;width:220px;height:220px;border-radius:50%;filter:blur(40px);animation:float 12s ease-in-out infinite}
+    .b1{background:var(--brand);top:5%;left:6%}
+    .b2{background:var(--brand-2);top:20%;right:8%;animation-duration:15s}
+    .b3{background:var(--brand-3);bottom:8%;left:14%;animation-duration:18s}
+    .b4{background:var(--brand-4);bottom:10%;right:12%;animation-duration:20s}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+
+    /* =====================
+       HERO SECTION
+       ===================== */
+    .hero{position:relative;z-index:1;display:grid;gap:26px;grid-template-columns:1.05fr .95fr;align-items:center}
+    .hero-card{padding:28px}
+    .tag{display:inline-flex;align-items:center;gap:8px;background:#fff1e9;border:1px solid #ffd7c7;color:#7a2a13;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px}
+    .title{font-size:clamp(28px,5vw,48px);line-height:1.05;margin:12px 0 8px 0}
+    .sub{font-size:18px;color:var(--muted)}
+    .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+
+    .sparkle-wrap{position:relative}
+    .sparkle{position:absolute;inset:12px;border-radius:var(--radius);background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.2) 0 20deg, rgba(255,255,255,0) 20deg 40deg);animation:spin 18s linear infinite}
+    @keyframes spin{to{transform:rotate(1turn)}}
+
+    /* =====================
+       TRIPLE PRODUCT CARDS
+       ===================== */
+    section{margin-top:42px}
+    h2.section{font-size:clamp(24px,3.6vw,32px);margin:0 0 8px 0}
+    .cards{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+    .p-card{overflow:hidden;position:relative}
+    .p-card figure{aspect-ratio:4/3;overflow:hidden}
+    .p-card figure img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+    .p-card:hover figure img{transform:scale(1.07)}
+    .p-body{padding:16px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .chip{font-size:12px;background:#f3f4f6;padding:6px 10px;border-radius:999px;display:inline-block}
+
+    /* =====================
+       INTERACTIVE RECIPES (JAR REVEAL)
+       ===================== */
+    .recipes{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+    .jar{padding:18px;text-align:center;cursor:pointer;transition:transform .15s}
+    .jar:active{transform:translateY(1px)}
+    .jar svg{width:70px;height:70px}
+    .reveal{display:none;margin-top:10px;color:var(--muted)}
+    .jar.active .reveal{display:block}
+
+    /* =====================
+       TESTIMONIALS CAROUSEL
+       ===================== */
+    .carousel{position:relative;overflow:hidden}
+    .slides{display:flex;transition:transform .5s}
+    .slide{min-width:100%;padding:22px}
+    .t-quote{font-size:20px;line-height:1.6}
+    .dots{display:flex;gap:8px;justify-content:center;margin-top:10px}
+    .dot{width:10px;height:10px;border-radius:999px;background:#e5e7eb}
+    .dot.active{background:var(--brand)}
+
+    /* =====================
+       CONTACT
+       ===================== */
+    form label{font-weight:700}
+    input,textarea{width:100%;padding:12px;border:1px solid #e5e7eb;border-radius:12px;margin-top:6px}
+
+    /* =====================
+       FOOTER
+       ===================== */
+    footer{margin-top:64px;border-top:1px solid #ffe9d9}
+    .foot{display:grid;gap:26px;grid-template-columns:2fr 1fr 1fr}
+    .copyright{color:var(--muted);font-size:14px;margin-top:10px}
+
+    /* =====================
+       RESPONSIVE
+       ===================== */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr 1fr}
+      .recipes{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:640px){
+      .menu{display:none}
+      .menu-toggle{display:inline-flex}
+      .cards,.recipes{grid-template-columns:1fr}
+      .foot{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- FLOATY ORNAMENTS (background blobs) -->
+  <div class="floaty">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+  </div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home">
+        <span class="brand-logo">🌶️</span>
+        <span>
+          Shimla Spice
+          <small>Jai Maa Kamaksha — Raksha & Kalyan</small>
+        </span>
+      </a>
+      <nav class="menu">
+        <a href="#about">About</a>
+        <a href="#products">Products</a>
+        <a href="#recipes">Recipes</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="btn ghost menu-toggle" onclick="toggleMenu()">Menu</button>
+    </div>
+  </header>
+
+  <main id="home" class="container" style="position:relative;z-index:1">
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="card hero-card">
+        <span class="tag">Homemade goodness in every jar</span>
+        <h1 class="title">Colourful, Interactive & Tasty — a site you’ll want to snack on 🍽️</h1>
+        <p class="sub">Authentic Himachali pickles crafted in small batches — zero artificial preservatives. Bold, nostalgic flavours inspired by our Nanu’s legendary <strong>Mardana Achar</strong>.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#products">Explore Products</a>
+          <a class="btn ghost" href="#recipes">Surprise Recipe</a>
+        </div>
+      </div>
+      <div class="sparkle-wrap card" style="padding:0;overflow:hidden">
+        <img alt="Colourful jars" src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop" />
+        <div class="sparkle" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section id="about">
+      <h2 class="section">Our Story</h2>
+      <div class="card" style="padding:22px">
+        <p style="margin:0;line-height:1.8">Shimla Spice began in our family kitchen in Himachal Pradesh. We honour traditional processes and keep it simple: real ingredients, slow curing, sun, time and patience. Every jar is a little festival — bursting with chilli, turmeric, hing and love. 💛</p>
+      </div>
+    </section>
+
+    <!-- ===================== PRODUCTS ===================== -->
+    <section id="products">
+      <h2 class="section">Bestsellers</h2>
+      <p class="muted">Hover to peek — click to flip for details.</p>
+      <div class="cards">
+        <!-- CARD 1 -->
+        <article class="card p-card" onclick="flipCard(this)">
+          <figure><img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?q=80&w=1200&auto=format&fit=crop" alt="Himachali Chukh"/></figure>
+          <div class="p-body">
+            <h3>Himachali Chukh (Green Chili)</h3>
+            <p class="muted">Fiery, tangy & aromatic — with a gentle hint of jaggery.</p>
+            <div class="chips"><span class="chip">Small‑batch</span><span class="chip">Vegan</span><span class="chip">No preservatives</span></div>
+          </div>
+        </article>
+        <!-- CARD 2 -->
+        <article class="card p-card" onclick="flipCard(this)">
+          <figure><img src="https://images.unsplash.com/photo-1526318472351-c75fcf070305?q=80&w=1200&auto=format&fit=crop" alt="Mango Pickle"/></figure>
+          <div class="p-body">
+            <h3>Mango Pickle (Mardana Achar)</h3>
+            <p class="muted">Our army‑inspired classic — bold, chunky, unforgettable.</p>
+            <div class="chips"><span class="chip">Family recipe</span><span class="chip">Chunky</span><span class="chip">No added colour</span></div>
+          </div>
+        </article>
+        <!-- CARD 3 -->
+        <article class="card p-card" onclick="flipCard(this)">
+          <figure><img src="https://images.unsplash.com/photo-1506806732259-39c2d0268443?q=80&w=1200&auto=format&fit=crop" alt="Lal Bharwa Mirch"/></figure>
+          <div class="p-body">
+            <h3>Lal Bharwa Mirch Achar</h3>
+            <p class="muted">Hand‑stuffed red chilies with a roasted spice blend.</p>
+            <div class="chips"><span class="chip">Hand‑stuffed</span><span class="chip">Roasted spices</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== INTERACTIVE RECIPES ===================== -->
+    <section id="recipes">
+      <h2 class="section">Tap the Jar — Get a Recipe Idea</h2>
+      <div class="recipes">
+        <div class="card jar" onclick="toggleJar(this)">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="14" width="36" height="42" rx="8" fill="var(--brand-2)"/>
+            <rect x="18" y="8" width="28" height="10" rx="3" fill="var(--brand)"/>
+          </svg>
+          <strong>Mango Pickle</strong>
+          <p class="reveal">Pair with hot parathas + curd. Add a spoon in dal tadka for a tangy kick.</p>
+        </div>
+        <div class="card jar" onclick="toggleJar(this)">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="14" width="36" height="42" rx="8" fill="var(--brand-3)"/>
+            <rect x="18" y="8" width="28" height="10" rx="3" fill="var(--brand)"/>
+          </svg>
+          <strong>Chukh Green Chili</strong>
+          <p class="reveal">Mix with warm mustard oil as a quick chutney. Killer with rajma‑chawal.</p>
+        </div>
+        <div class="card jar" onclick="toggleJar(this)">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="14" width="36" height="42" rx="8" fill="var(--brand-4)"/>
+            <rect x="18" y="8" width="28" height="10" rx="3" fill="var(--brand)"/>
+          </svg>
+          <strong>Lal Bharwa</strong>
+          <p class="reveal">Crumble into tadka for smoky heat. Great with khichdi or simple dal.</p>
+        </div>
+      </div>
+      <div style="margin-top:14px"><button class="btn primary" onclick="recipeRoulette()">🎲 Surprise Me</button> <span id="roulette" class="muted" style="margin-left:10px"></span></div>
+    </section>
+
+    <!-- ===================== REVIEWS (CAROUSEL) ===================== -->
+    <section id="reviews">
+      <h2 class="section">People Are Licking Their Fingers 😋</h2>
+      <div class="card carousel" id="carousel">
+        <div class="slides" id="slides">
+          <div class="slide">
+            <p class="t-quote">“Best mango pickle I’ve had since nani’s kitchen. Perfect balance of tang, spice, and nostalgia.”</p>
+            <p class="muted">— Asha, Delhi</p>
+          </div>
+          <div class="slide">
+            <p class="t-quote">“Chukh with rajma‑chawal = heaven. Brings that Himachali soul to my table.”</p>
+            <p class="muted">— Rohit, Chandigarh</p>
+          </div>
+          <div class="slide">
+            <p class="t-quote">“Lal Bharwa is 🔥. Stuffed perfectly, gives a smoky bite with every meal.”</p>
+            <p class="muted">— Sana, Mumbai</p>
+          </div>
+        </div>
+      </div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section id="contact">
+      <h2 class="section">Contact & Wholesale</h2>
+      <div class="card" style="padding:22px">
+        <form action="https://formspree.io/f/moqzlyqg" method="POST" onsubmit="return validateForm(this)">
+          <div class="grid" style="display:grid;gap:14px;grid-template-columns:1fr 1fr">
+            <div>
+              <label>Name
+                <input name="name" required>
+              </label>
+            </div>
+            <div>
+              <label>Email
+                <input type="email" name="email" required>
+              </label>
+            </div>
+          </div>
+          <div style="height:8px"></div>
+          <label>Message
+            <textarea name="message" rows="5" placeholder="Tell us what you need…"></textarea>
+          </label>
+          <div style="height:12px"></div>
+          <button class="btn primary" type="submit">Send</button>
+          <p class="muted" style="margin-top:8px">Or email: <a href="mailto:hello@shimlaspice.in">hello@shimlaspice.in</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="container foot">
+      <div>
+        <strong>Shimla Spice</strong>
+        <p class="muted" style="margin:8px 0 0">Jai Maa Kamaksha — raksha karna, kalyan karna. 🙏</p>
+        <p class="copyright">© <span id="year"></span> Shimla Spice. All rights reserved.</p>
+      </div>
+      <div>
+        <strong>Quick Links</strong>
+        <ul style="list-style:none;padding:0;margin:8px 0 0;line-height:2">
+          <li><a href="#about">About</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#recipes">Recipes</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <strong>Reach Us</strong>
+        <ul style="list-style:none;padding:0;margin:8px 0 0;line-height:2">
+          <li>Email: <a href="mailto:hello@shimlaspice.in">hello@shimlaspice.in</a></li>
+          <li>Instagram: @shimla_spice</li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===================== UTIL & STATE =====================
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => [...document.querySelectorAll(sel)];
+
+    // Year
+    $('#year').textContent = new Date().getFullYear();
+
+    // Mobile menu toggle (simple)
+    function toggleMenu(){
+      const nav = document.querySelector('.menu');
+      const visible = getComputedStyle(nav).display !== 'none';
+      nav.style.display = visible ? 'none' : 'flex';
+    }
+
+    // Card flip (for now, simple text swap)
+    function flipCard(el){
+      el.classList.toggle('flipped');
+      if(!el.dataset.orig){
+        el.dataset.orig = el.querySelector('.p-body').innerHTML;
+      }
+      const showingDetails = el.classList.contains('flipped');
+      el.querySelector('.p-body').innerHTML = showingDetails
+        ? `<h3>Ingredients & Notes</h3><ul style="line-height:1.9; padding-left:18px"><li>No artificial preservatives</li><li>Cold-pressed oil</li><li>Hand-ground masalas</li></ul><div style="height:8px"></div><a class='btn primary' href='#contact'>Enquire</a>`
+        : el.dataset.orig;
+    }
+
+    // Jar reveal toggle
+    function toggleJar(card){ card.classList.toggle('active'); }
+
+    // Recipe Roulette
+    const ideas = [
+      'Chukh + rajma-chawal = soul food',
+      'Mango pickle tadka in dal = wow',
+      'Lal Bharwa crumbled over khichdi',
+      'Chukh + butter on hot toast',
+      'Mango pickle with paratha + curd',
+      'Add a spoon to poha for zing'
+    ];
+    function recipeRoulette(){
+      const msg = ideas[Math.floor(Math.random()*ideas.length)];
+      $('#roulette').textContent = '→ ' + msg;
+    }
+
+    // ===================== CAROUSEL =====================
+    const slides = $('#slides');
+    const slideCount = slides.children.length;
+    let i = 0;
+    const dots = $('#dots');
+    for(let d=0; d<slideCount; d++){
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (d===0?' active':'');
+      dot.addEventListener('click',()=>goTo(d));
+      dots.appendChild(dot);
+    }
+    function goTo(n){
+      i = (n+slideCount)%slideCount;
+      slides.style.transform = `translateX(-${i*100}%)`;
+      $$('#dots .dot').forEach((el,idx)=> el.classList.toggle('active', idx===i));
+    }
+    setInterval(()=>goTo(i+1), 4000);
+
+    // ===================== FORM VALIDATION =====================
+    function validateForm(form){
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      if(!name || !email){
+        alert('Please fill your name and email.');
+        return false;
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
